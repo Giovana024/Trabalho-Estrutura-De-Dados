@@ -91,14 +91,3 @@ Se estiver utilizando o GDB Online:
 5.Utilizar o menu exibido no terminal.
 
 ---
-
-# Instruções para compilar
-
-## Usando GCC:
-
-### Trabalho A
-```bash
-gcc trabalho_a.c -o trabalho_a
-Utiliza uma fila simples para trabalhos normais e uma fila circular para trabalhos prioritários, garantindo que os prioritários sejam processados primeiro.
-
----
