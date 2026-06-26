@@ -28,9 +28,13 @@ Instruções para executar:
 Se estiver utilizando o GDB Online:
 
 1.0 Abrir um novo projeto
+
 2.0 Escolher a linguagem utilizado, no nosso caso será C
+
 3.0 Copiar o conteúdo do arquivo trabalho_a.c.
+
 4.0 Clicar em Run.
+
 5.0 Utilizar o menu exibido no terminal.
 
 ---
