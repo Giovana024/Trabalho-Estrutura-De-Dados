@@ -1,7 +1,7 @@
 # Trabalho-Estrutura-De-Dados
 Repositório para desenvolvimento dos trabalhos da disciplina Estrutura de Dados do 3º semestre UNIJORGE 2026.1
 
-Integrantes: Albert Claudio Arruda, Giovana Gusmão Santos, Iasmin Luise Santos da Silva e Monique Amorim Mendes.
+Integrantes: Albert Claudio Arruda Nascimento, Giovana Gusmão Santos, Iasmin Luise Santos da Silva e Monique Amorim Mendes.
 
 - Turma: 42CMP01M3A
 - Curso: Ciência da Computação
