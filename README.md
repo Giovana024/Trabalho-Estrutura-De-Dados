@@ -27,15 +27,15 @@ Instruções para executar:
 
 Se estiver utilizando o GDB Online:
 
-1.0 Abrir um novo projeto
+1.Abrir um novo projeto
 
-2.0 Escolher a linguagem utilizado, no nosso caso será C
+2.Escolher a linguagem utilizado, no nosso caso será C
 
-3.0 Copiar o conteúdo do arquivo trabalho_a.c.
+3.Copiar o conteúdo do arquivo trabalho_a.c.
 
-4.0 Clicar em Run.
+4.Clicar em Run.
 
-5.0 Utilizar o menu exibido no terminal.
+5.Utilizar o menu exibido no terminal.
 
 ---
 
@@ -43,10 +43,52 @@ Se estiver utilizando o GDB Online:
 Simula o funcionamento de um navegador web utilizando duas pilhas.  
 Permite visitar páginas, voltar e avançar entre páginas, além de listar o histórico e salvar/carregar os dados em CSV.
 
+Instruções para compilar:
+---
+```bash
+gcc trabalho_b.c -o trabalho_b
+```
+
+Instruções para executar:
+---
+
+Se estiver utilizando o GDB Online:
+
+1.Abrir um novo projeto
+
+2.Escolher a linguagem utilizado, no nosso caso será C
+
+3.Copiar o conteúdo do arquivo trabalho_b.c.
+
+4.Clicar em Run.
+
+5.Utilizar o menu exibido no terminal.
+
 ---
 
 ## Trabalho C – Fila de Impressão
-Simula um sistema de fila de impressão com prioridade.  
+Simula um sistema de fila de impressão com prioridade.
+
+Instruções para compilar:
+---
+```bash
+gcc trabalho_c.c -o trabalho_c
+```
+
+Instruções para executar:
+---
+
+Se estiver utilizando o GDB Online:
+
+1.Abrir um novo projeto
+
+2.Escolher a linguagem utilizado, no nosso caso será C
+
+3.Copiar o conteúdo do arquivo trabalho_c.c.
+
+4.Clicar em Run.
+
+5.Utilizar o menu exibido no terminal.
 
 ---
 
