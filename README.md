@@ -29,11 +29,11 @@ Se estiver utilizando o GDB Online:
 
 1.Abrir um novo projeto
 
-2.Escolher a linguagem utilizado, no nosso caso será C
+2.Escolher a linguagem C
 
-3.Copiar o conteúdo do arquivo trabalho_a.c.
+3.Copiar o conteúdo do arquivo `trabalho_a.c.`
 
-4.Clicar em Run.
+4.Clicar em **Run**.
 
 5.Utilizar o menu exibido no terminal.
 
@@ -56,11 +56,11 @@ Se estiver utilizando o GDB Online:
 
 1.Abrir um novo projeto
 
-2.Escolher a linguagem utilizado, no nosso caso será C
+2.Escolher a linguagem C
 
-3.Copiar o conteúdo do arquivo trabalho_b.c.
+3.Copiar o conteúdo do arquivo  `trabalho_b.c.`
 
-4.Clicar em Run.
+4.Clicar em **Run**.
 
 5.Utilizar o menu exibido no terminal.
 
@@ -82,11 +82,11 @@ Se estiver utilizando o GDB Online:
 
 1.Abrir um novo projeto
 
-2.Escolher a linguagem utilizado, no nosso caso será C
+2.Escolher a linguagem C
 
-3.Copiar o conteúdo do arquivo trabalho_c.c.
+3.Copiar o conteúdo do arquivo `trabalho_c.c.`
 
-4.Clicar em Run.
+4.Clicar em **Run**.
 
 5.Utilizar o menu exibido no terminal.
 
