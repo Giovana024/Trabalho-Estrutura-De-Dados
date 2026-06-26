@@ -15,6 +15,7 @@ Integrantes: Albert Claudio Arruda Nascimento, Giovana Gusmão Santos, Iasmin Lu
 ## Trabalho A – Playlist de Músicas
 Explicação: Programa que gerencia uma playlist utilizando um vetor de estruturas.  
 Permite cadastrar, buscar, editar, excluir e listar músicas, além de salvar e carregar os dados em arquivo CSV.
+
 Instruções para compilar:
 
 ```bash
