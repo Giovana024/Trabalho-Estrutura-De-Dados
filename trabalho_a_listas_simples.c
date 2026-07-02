@@ -67,6 +67,7 @@ void   editarMusica(void);
 void   excluirMusica(void);
 void   listarMusicas(void);
 void   salvarCSV(void);
+void   mostrarCSV(void);
 void   carregarCSV(void);
 static int lerCSV(void);
 
@@ -86,13 +87,11 @@ static void   toLowerStr(char *dest, const char *src);
    FUNCOES AUXILIARES
    ---------------------------------------------- */
 
-/* Descarta caracteres residuais no buffer de entrada */
 void limparBuffer(void) {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-/* Limpa a tela (funciona em Windows e Linux/Mac) */
 void limparTela(void) {
 #ifdef _WIN32
     system("cls");
@@ -101,21 +100,18 @@ void limparTela(void) {
 #endif
 }
 
-/* Aguarda N segundos antes de continuar */
 void pausar(int segundos) {
 #ifdef _WIN32
     char cmd[32];
     sprintf(cmd, "timeout /t %d >nul", segundos);
     system(cmd);
 #else
-    /* Usa sleep do sistema */
     char cmd[32];
     sprintf(cmd, "sleep %d", segundos);
     system(cmd);
 #endif
 }
 
-/* Verifica se uma string esta vazia (so espacos ou nula) */
 static int stringVazia(const char *s) {
     if (s == NULL) return 1;
     while (*s) {
@@ -125,7 +121,6 @@ static int stringVazia(const char *s) {
     return 1;
 }
 
-/* Converte string para minusculas (para busca case-insensitive) */
 static void toLowerStr(char *dest, const char *src) {
     while (*src) {
         *dest = (char)tolower((unsigned char)*src);
@@ -135,7 +130,6 @@ static void toLowerStr(char *dest, const char *src) {
     *dest = '\0';
 }
 
-/* Insere um no ja alocado no final da lista */
 static void inserirNoFinal(No *novo) {
     novo->proximo  = NULL;
     novo->anterior = fim;
@@ -143,28 +137,24 @@ static void inserirNoFinal(No *novo) {
     if (fim != NULL) {
         fim->proximo = novo;
     } else {
-        /* Lista estava vazia */
         inicio = novo;
     }
     fim = novo;
     quantidade++;
 }
 
-/* Remove um no da lista e libera a memoria */
 static void removerNo(No *no) {
     if (no == NULL) return;
 
     if (no->anterior != NULL) {
         no->anterior->proximo = no->proximo;
     } else {
-        /* Era o primeiro */
         inicio = no->proximo;
     }
 
     if (no->proximo != NULL) {
         no->proximo->anterior = no->anterior;
     } else {
-        /* Era o ultimo */
         fim = no->anterior;
     }
 
@@ -172,18 +162,17 @@ static void removerNo(No *no) {
     quantidade--;
 }
 
-/* Exibe o menu principal com secao de extras e total de musicas */
 void exibirMenu(void) {
     limparTela();
     printf("+==========================================+\n");
-    printf("|        ** PLAYLIST MUSICAL **             |\n");
-    printf("|   Total de musicas: %-5d                |\n", quantidade);
+    printf("|        ** PLAYLIST MUSICAL **            |\n");
+    printf("|   Total de músicas: %-5d               |\n", quantidade);
     printf("+==========================================+\n");
-    printf("|  1. Inserir musica                       |\n");
-    printf("|  2. Buscar musica por ID                 |\n");
-    printf("|  3. Editar musica                        |\n");
-    printf("|  4. Excluir musica                       |\n");
-    printf("|  5. Listar todas as musicas              |\n");
+    printf("|  1. Inserir música                       |\n");
+    printf("|  2. Buscar música por ID                 |\n");
+    printf("|  3. Editar música                        |\n");
+    printf("|  4. Excluir música                       |\n");
+    printf("|  5. Listar todas as músicas              |\n");
     printf("|  6. Salvar em CSV                        |\n");
     printf("|  7. Carregar do CSV                      |\n");
     printf("+------------------------------------------+\n");
@@ -196,13 +185,9 @@ void exibirMenu(void) {
     printf("+------------------------------------------+\n");
     printf("|  0. Sair                                 |\n");
     printf("+==========================================+\n");
-    printf("Escolha uma opcao: ");
+    printf("Escolha uma opção: ");
 }
 
-/*
- * Busca um no na lista pelo ID.
- * Retorna ponteiro para o no ou NULL se nao encontrar.
- */
 No *buscarNoPorId(int id) {
     No *atual = inicio;
     while (atual != NULL) {
@@ -214,33 +199,31 @@ No *buscarNoPorId(int id) {
     return NULL;
 }
 
-/* Exibe os dados de uma musica formatados (duracao em min:seg) */
 void exibirMusica(No *no) {
     int min = no->duracao / 60;
     int seg = no->duracao % 60;
 
     printf("  +---------------------------------\n");
-    printf("  | ID:      %d\n", no->id);
-    printf("  | Titulo:  %s\n", no->titulo);
-    printf("  | Artista: %s\n", no->artista);
-    printf("  | Duracao: %d:%02d\n", min, seg);
-    printf("  | Genero:  %s\n", no->genero);
+    printf("  | ID:      %d\n",        no->id);
+    printf("  | Titulo:  %s\n",        no->titulo);
+    printf("  | Artista: %s\n",        no->artista);
+    printf("  | Duração: %d:%02d\n",   min, seg);
+    printf("  | Gênero:  %s\n",        no->genero);
     printf("  +---------------------------------\n");
 }
 
 /* ----------------------------------------------
-   FUNCIONALIDADE 1 - INSERIR (malloc, validacoes)
+   FUNCIONALIDADE 1 - INSERIR
    ---------------------------------------------- */
 void inserirMusica(void) {
     limparTela();
-    printf("-- INSERIR MUSICA --\n\n");
+    printf("-- INSERIR MÚSICA --\n\n");
 
     int id;
 
-    /* Le e valida o ID */
     printf("ID      : ");
     if (scanf("%d", &id) != 1) {
-        printf("ERRO: Entrada invalida para ID.\n");
+        printf("ERRO: Entrada inválida para ID.\n");
         limparBuffer();
         pausar(3);
         return;
@@ -248,71 +231,64 @@ void inserirMusica(void) {
     limparBuffer();
 
     if (id <= 0) {
-        printf("ERRO: O ID deve ser um numero positivo.\n");
+        printf("ERRO: O ID deve ser um número positivo.\n");
         pausar(3);
         return;
     }
 
-    /* Verifica duplicidade de ID */
     if (buscarNoPorId(id) != NULL) {
-        printf("ERRO: Ja existe uma musica com o ID %d.\n", id);
+        printf("ERRO: Já existe uma música com o ID %d.\n", id);
         pausar(3);
         return;
     }
 
-    /* Le titulo (com validacao de string vazia) */
     char titulo[50];
     printf("Titulo  : ");
     fgets(titulo, sizeof(titulo), stdin);
     titulo[strcspn(titulo, "\n")] = '\0';
     if (stringVazia(titulo)) {
-        printf("ERRO: O titulo nao pode ser vazio.\n");
+        printf("ERRO: O titulo não pode ser vazio.\n");
         pausar(3);
         return;
     }
 
-    /* Le artista (com validacao de string vazia) */
     char artista[50];
     printf("Artista : ");
     fgets(artista, sizeof(artista), stdin);
     artista[strcspn(artista, "\n")] = '\0';
     if (stringVazia(artista)) {
-        printf("ERRO: O artista nao pode ser vazio.\n");
+        printf("ERRO: O artista não pode ser vazio.\n");
         pausar(3);
         return;
     }
 
-    /* Le duracao (deve ser > 0) */
     int duracao;
     printf("Duracao (segundos): ");
     if (scanf("%d", &duracao) != 1 || duracao <= 0) {
-        printf("ERRO: Duracao invalida. Deve ser um numero positivo.\n");
+        printf("ERRO: Duração inválida. Deve ser um número positivo.\n");
         limparBuffer();
         pausar(3);
         return;
     }
     limparBuffer();
 
-    /* Le genero (com validacao de string vazia) */
     char genero[30];
     printf("Genero  : ");
     fgets(genero, sizeof(genero), stdin);
     genero[strcspn(genero, "\n")] = '\0';
     if (stringVazia(genero)) {
-        printf("ERRO: O genero nao pode ser vazio.\n");
+        printf("ERRO: O gênero não pode ser vazio.\n");
         pausar(3);
         return;
     }
 
-    /* Aloca memoria para o novo no */
     No *novo = (No *)malloc(sizeof(No));
     if (novo == NULL) {
-        printf("ERRO: Falha ao alocar memoria.\n");
+        printf("ERRO: Falha ao alocar memória.\n");
         pausar(3);
         return;
     }
 
-    /* Preenche os campos */
     novo->id      = id;
     novo->duracao  = duracao;
     strncpy(novo->titulo,  titulo,  sizeof(novo->titulo)  - 1);
@@ -322,12 +298,10 @@ void inserirMusica(void) {
     strncpy(novo->genero,  genero,  sizeof(novo->genero)  - 1);
     novo->genero[sizeof(novo->genero) - 1] = '\0';
 
-    /* Insere no final da lista */
     inserirNoFinal(novo);
 
-    /* Mostra confirmacao */
     limparTela();
-    printf("-- MUSICA CADASTRADA COM SUCESSO! (Total: %d) --\n\n", quantidade);
+    printf("-- MÚSICA CADASTRADA COM SUCESSO! (Total: %d) --\n\n", quantidade);
     exibirMusica(novo);
     printf("\nVoltando ao menu em 6 segundos...\n");
     pausar(6);
@@ -338,7 +312,7 @@ void inserirMusica(void) {
    ---------------------------------------------- */
 void buscarMusica(void) {
     limparTela();
-    printf("-- BUSCAR MUSICA POR ID --\n\n");
+    printf("-- BUSCAR MÚSICA POR ID --\n\n");
 
     if (quantidade == 0) {
         printf("AVISO: A playlist esta vazia.\n");
@@ -349,7 +323,7 @@ void buscarMusica(void) {
     int id;
     printf("Digite o ID da musica: ");
     if (scanf("%d", &id) != 1) {
-        printf("ERRO: Entrada invalida.\n");
+        printf("ERRO: Entrada inválida.\n");
         limparBuffer();
         pausar(3);
         return;
@@ -358,7 +332,7 @@ void buscarMusica(void) {
 
     No *encontrado = buscarNoPorId(id);
     if (encontrado == NULL) {
-        printf("ERRO: Nenhuma musica encontrada com ID %d.\n", id);
+        printf("ERRO: Nenhuma música encontrada com ID %d.\n", id);
         pausar(3);
         return;
     }
@@ -374,7 +348,7 @@ void buscarMusica(void) {
    ---------------------------------------------- */
 void editarMusica(void) {
     limparTela();
-    printf("-- EDITAR MUSICA --\n\n");
+    printf("-- EDITAR MÚSICA --\n\n");
 
     if (quantidade == 0) {
         printf("AVISO: A playlist esta vazia.\n");
@@ -383,9 +357,9 @@ void editarMusica(void) {
     }
 
     int id;
-    printf("Digite o ID da musica a editar: ");
+    printf("Digite o ID da música a editar: ");
     if (scanf("%d", &id) != 1) {
-        printf("ERRO: Entrada invalida.\n");
+        printf("ERRO: Entrada inválida.\n");
         limparBuffer();
         pausar(3);
         return;
@@ -394,18 +368,17 @@ void editarMusica(void) {
 
     No *no = buscarNoPorId(id);
     if (no == NULL) {
-        printf("ERRO: Nenhuma musica encontrada com ID %d.\n", id);
+        printf("ERRO: Nenhuma música encontrada com ID %d.\n", id);
         pausar(3);
         return;
     }
 
-    printf("\nMusica atual:\n\n");
+    printf("\nMúsica atual:\n\n");
     exibirMusica(no);
     printf("\nDeixe em branco para manter o valor atual.\n\n");
 
     char buffer[50];
 
-    /* Edita titulo */
     printf("Novo titulo  [%s]: ", no->titulo);
     fgets(buffer, sizeof(buffer), stdin);
     buffer[strcspn(buffer, "\n")] = '\0';
@@ -414,7 +387,6 @@ void editarMusica(void) {
         no->titulo[sizeof(no->titulo) - 1] = '\0';
     }
 
-    /* Edita artista */
     printf("Novo artista [%s]: ", no->artista);
     fgets(buffer, sizeof(buffer), stdin);
     buffer[strcspn(buffer, "\n")] = '\0';
@@ -423,8 +395,7 @@ void editarMusica(void) {
         no->artista[sizeof(no->artista) - 1] = '\0';
     }
 
-    /* Edita duracao */
-    printf("Nova duracao [%d seg]: ", no->duracao);
+    printf("Nova duração [%d seg]: ", no->duracao);
     fgets(buffer, sizeof(buffer), stdin);
     buffer[strcspn(buffer, "\n")] = '\0';
     if (!stringVazia(buffer)) {
@@ -432,12 +403,11 @@ void editarMusica(void) {
         if (nova_dur > 0) {
             no->duracao = nova_dur;
         } else {
-            printf("AVISO: Duracao invalida, mantido o valor anterior.\n");
+            printf("AVISO: Duração inválida, mantido o valor anterior.\n");
         }
     }
 
-    /* Edita genero */
-    printf("Novo genero  [%s]: ", no->genero);
+    printf("Novo gênero  [%s]: ", no->genero);
     fgets(buffer, sizeof(buffer), stdin);
     buffer[strcspn(buffer, "\n")] = '\0';
     if (!stringVazia(buffer)) {
@@ -446,18 +416,18 @@ void editarMusica(void) {
     }
 
     limparTela();
-    printf("-- MUSICA ATUALIZADA COM SUCESSO! --\n\n");
+    printf("-- MÚSICA ATUALIZADA COM SUCESSO! --\n\n");
     exibirMusica(no);
     printf("\nVoltando ao menu em 6 segundos...\n");
     pausar(6);
 }
 
 /* ----------------------------------------------
-   FUNCIONALIDADE 4 - EXCLUIR (free, confirmacao)
+   FUNCIONALIDADE 4 - EXCLUIR
    ---------------------------------------------- */
 void excluirMusica(void) {
     limparTela();
-    printf("-- EXCLUIR MUSICA --\n\n");
+    printf("-- EXCLUIR MÚSICA --\n\n");
 
     if (quantidade == 0) {
         printf("AVISO: A playlist esta vazia.\n");
@@ -466,9 +436,9 @@ void excluirMusica(void) {
     }
 
     int id;
-    printf("Digite o ID da musica a excluir: ");
+    printf("Digite o ID da música a excluir: ");
     if (scanf("%d", &id) != 1) {
-        printf("ERRO: Entrada invalida.\n");
+        printf("ERRO: Entrada inválida.\n");
         limparBuffer();
         pausar(3);
         return;
@@ -477,29 +447,27 @@ void excluirMusica(void) {
 
     No *no = buscarNoPorId(id);
     if (no == NULL) {
-        printf("ERRO: Nenhuma musica encontrada com ID %d.\n", id);
+        printf("ERRO: Nenhuma música encontrada com ID %d.\n", id);
         pausar(3);
         return;
     }
 
-    printf("\nMusica a excluir:\n\n");
+    printf("\nMúsica a excluir:\n\n");
     exibirMusica(no);
 
-    /* Confirmacao antes de excluir */
     printf("Tem certeza que deseja excluir? (s/n): ");
     char conf;
     scanf(" %c", &conf);
     limparBuffer();
     if (conf != 's' && conf != 'S') {
-        printf("Operacao cancelada.\n");
+        printf("Operação cancelada.\n");
         pausar(3);
         return;
     }
 
-    /* Remove o no da lista e libera memoria (free) */
     removerNo(no);
 
-    printf("\nOK: Musica excluida com sucesso! (Total restante: %d)\n", quantidade);
+    printf("\nOK: Música excluida com sucesso! (Total restante: %d)\n", quantidade);
     printf("Voltando ao menu em 3 segundos...\n");
     pausar(3);
 }
@@ -517,7 +485,7 @@ void listarMusicas(void) {
         return;
     }
 
-    printf("Total: %d musica(s)\n\n", quantidade);
+    printf("Total: %d música(s)\n\n", quantidade);
 
     int i = 1;
     No *atual = inicio;
@@ -538,15 +506,13 @@ void listarMusicas(void) {
 void salvarCSV(void) {
     FILE *arq = fopen(ARQUIVO_CSV, "w");
     if (arq == NULL) {
-        printf("ERRO: Nao foi possivel abrir o arquivo para escrita.\n");
+        printf("ERRO: Não foi possivel abrir o arquivo para escrita.\n");
         pausar(3);
         return;
     }
 
-    /* Cabecalho */
     fprintf(arq, "id;titulo;artista;duracao;genero\n");
 
-    /* Registros - percorre a lista encadeada */
     No *atual = inicio;
     while (atual != NULL) {
         fprintf(arq, "%d;%s;%s;%d;%s\n",
@@ -562,16 +528,37 @@ void salvarCSV(void) {
 }
 
 /* ----------------------------------------------
+   MOSTRAR CONTEUDO DO CSV NO TERMINAL
+   ---------------------------------------------- */
+void mostrarCSV(void) {
+    FILE *arq = fopen(ARQUIVO_CSV, "r");
+    if (arq == NULL) {
+        printf("ERRO: Arquivo CSV não encontrado.\n");
+        return;
+    }
+
+    printf("\nConteúdo do arquivo \"%s\":\n", ARQUIVO_CSV);
+    printf("+------------------------------------------+\n");
+
+    char linha[256];
+    while (fgets(linha, sizeof(linha), arq) != NULL) {
+        linha[strcspn(linha, "\n")] = '\0';
+        printf("  %s\n", linha);
+    }
+
+    printf("+------------------------------------------+\n");
+    fclose(arq);
+}
+
+/* ----------------------------------------------
    FUNCAO INTERNA - le o CSV e insere na lista
-   Retorna o numero de registros carregados.
    ---------------------------------------------- */
 static int lerCSV(void) {
     FILE *arq = fopen(ARQUIVO_CSV, "r");
-    if (arq == NULL) return -1; /* arquivo nao existe */
+    if (arq == NULL) return -1;
 
     char linha[256];
 
-    /* Pula o cabecalho */
     if (fgets(linha, sizeof(linha), arq) == NULL) {
         fclose(arq);
         return 0;
@@ -610,19 +597,15 @@ static int lerCSV(void) {
         strncpy(genero, token, sizeof(genero) - 1);
         genero[sizeof(genero) - 1] = '\0';
 
-        /* Ignora duplicados */
         if (buscarNoPorId(id) != NULL) continue;
-
-        /* Ignora registros com dados invalidos */
         if (id <= 0 || duracao <= 0) continue;
         if (stringVazia(titulo) || stringVazia(artista) || stringVazia(genero)) continue;
 
-        /* Aloca o novo no com malloc */
         No *novo = (No *)malloc(sizeof(No));
         if (novo == NULL) continue;
 
-        novo->id     = id;
-        novo->duracao = duracao;
+        novo->id      = id;
+        novo->duracao  = duracao;
         strncpy(novo->titulo,  titulo,  sizeof(novo->titulo)  - 1);
         novo->titulo[sizeof(novo->titulo) - 1] = '\0';
         strncpy(novo->artista, artista, sizeof(novo->artista) - 1);
@@ -645,14 +628,13 @@ void carregarCSV(void) {
     limparTela();
     printf("-- CARREGAR DO CSV --\n\n");
 
-    /* Limpa a lista atual antes de recarregar */
     while (inicio != NULL) {
         removerNo(inicio);
     }
 
     int result = lerCSV();
     if (result == -1) {
-        printf("AVISO: Arquivo \"%s\" nao encontrado.\n", ARQUIVO_CSV);
+        printf("AVISO: Arquivo \"%s\" não encontrado.\n", ARQUIVO_CSV);
     } else {
         printf("OK: %d musica(s) carregada(s) de \"%s\".\n", result, ARQUIVO_CSV);
     }
@@ -665,9 +647,7 @@ void carregarCSV(void) {
    FUNCIONALIDADES EXTRAS
    ============================================================== */
 
-/* ----------------------------------------------
-   EXTRA 8 - BUSCAR POR TITULO, ARTISTA OU GENERO
-   ---------------------------------------------- */
+/* EXTRA 8 - BUSCAR POR TITULO, ARTISTA OU GENERO */
 void buscarPorCampo(void) {
     limparTela();
     printf("-- BUSCAR POR TITULO / ARTISTA / GENERO --\n\n");
@@ -686,7 +666,7 @@ void buscarPorCampo(void) {
 
     int opcao;
     if (scanf("%d", &opcao) != 1 || opcao < 1 || opcao > 3) {
-        printf("ERRO: Opcao invalida.\n");
+        printf("ERRO: Opção inválida.\n");
         limparBuffer();
         pausar(3);
         return;
@@ -699,12 +679,11 @@ void buscarPorCampo(void) {
     termo[strcspn(termo, "\n")] = '\0';
 
     if (stringVazia(termo)) {
-        printf("ERRO: Termo de busca nao pode ser vazio.\n");
+        printf("ERRO: Termo de busca não pode ser vazio.\n");
         pausar(3);
         return;
     }
 
-    /* Converte termo para minusculas */
     char termoLower[50];
     toLowerStr(termoLower, termo);
 
@@ -731,18 +710,16 @@ void buscarPorCampo(void) {
     }
 
     if (encontradas == 0) {
-        printf("Nenhuma musica encontrada com o termo \"%s\".\n", termo);
+        printf("Nenhuma música encontrada com o termo \"%s\".\n", termo);
     } else {
-        printf("\nTotal encontrado: %d musica(s).\n", encontradas);
+        printf("\nTotal encontrado: %d música(s).\n", encontradas);
     }
 
     printf("\nPressione ENTER para voltar ao menu...");
     limparBuffer();
 }
 
-/* ----------------------------------------------
-   EXTRA 9 - ESTATISTICAS DA PLAYLIST
-   ---------------------------------------------- */
+/* EXTRA 9 - ESTATISTICAS DA PLAYLIST */
 void estatisticas(void) {
     limparTela();
     printf("-- ESTATISTICAS DA PLAYLIST --\n\n");
@@ -753,15 +730,14 @@ void estatisticas(void) {
         return;
     }
 
-    int duracaoTotal  = 0;
-    int maiorDuracao   = 0;
-    int menorDuracao   = 0;
-    No *maisCurta      = NULL;
-    No *maisLonga      = NULL;
+    int duracaoTotal = 0;
+    int maiorDuracao = 0;
+    int menorDuracao = 0;
+    No *maisCurta    = NULL;
+    No *maisLonga    = NULL;
 
     No *atual = inicio;
 
-    /* Inicializa com o primeiro no */
     maiorDuracao = atual->duracao;
     menorDuracao = atual->duracao;
     maisLonga    = atual;
@@ -783,27 +759,24 @@ void estatisticas(void) {
     }
 
     int mediaSegundos = duracaoTotal / quantidade;
-
     int totalMin = duracaoTotal / 60;
     int totalSeg = duracaoTotal % 60;
     int mediaMin = mediaSegundos / 60;
     int mediaSeg = mediaSegundos % 60;
 
-    printf("  Total de musicas:    %d\n", quantidade);
-    printf("  Duracao total:       %d:%02d (min:seg)\n", totalMin, totalSeg);
-    printf("  Duracao media:       %d:%02d (min:seg)\n", mediaMin, mediaSeg);
-    printf("\n  Musica mais longa:\n");
+    printf("  Total de músicas:    %d\n", quantidade);
+    printf("  Duração total:       %d:%02d (min:seg)\n", totalMin, totalSeg);
+    printf("  Duração média:       %d:%02d (min:seg)\n", mediaMin, mediaSeg);
+    printf("\n  Música mais longa:\n");
     exibirMusica(maisLonga);
-    printf("\n  Musica mais curta:\n");
+    printf("\n  Música mais curta:\n");
     exibirMusica(maisCurta);
 
     printf("\nPressione ENTER para voltar ao menu...");
     limparBuffer();
 }
 
-/* ----------------------------------------------
-   EXTRA 10 - LISTAR EM ORDEM REVERSA
-   ---------------------------------------------- */
+/* EXTRA 10 - LISTAR EM ORDEM REVERSA */
 void listarReverso(void) {
     limparTela();
     printf("-- PLAYLIST EM ORDEM REVERSA --\n\n");
@@ -814,7 +787,7 @@ void listarReverso(void) {
         return;
     }
 
-    printf("Total: %d musica(s)\n\n", quantidade);
+    printf("Total: %d música(s)\n\n", quantidade);
 
     int i = quantidade;
     No *atual = fim;
@@ -829,20 +802,18 @@ void listarReverso(void) {
     limparBuffer();
 }
 
-/* ----------------------------------------------
-   EXTRA 11 - LIMPAR PLAYLIST INTEIRA (free)
-   ---------------------------------------------- */
+/* EXTRA 11 - LIMPAR PLAYLIST INTEIRA */
 void limparPlaylist(void) {
     limparTela();
     printf("-- LIMPAR PLAYLIST INTEIRA --\n\n");
 
     if (quantidade == 0) {
-        printf("AVISO: A playlist ja esta vazia.\n");
+        printf("AVISO: A playlist já esta vazia.\n");
         pausar(3);
         return;
     }
 
-    printf("ATENCAO: Isso ira remover TODAS as %d musica(s) da playlist.\n", quantidade);
+    printf("ATENÇÃO: Isso ira remover TODAS as %d musica(s) da playlist.\n", quantidade);
     printf("Tem certeza? (s/n): ");
 
     char conf;
@@ -850,18 +821,17 @@ void limparPlaylist(void) {
     limparBuffer();
 
     if (conf != 's' && conf != 'S') {
-        printf("Operacao cancelada.\n");
+        printf("Operação cancelada.\n");
         pausar(3);
         return;
     }
 
-    /* Libera todos os nos com free */
     int total = quantidade;
     while (inicio != NULL) {
         removerNo(inicio);
     }
 
-    printf("\nOK: %d musica(s) removida(s). Playlist limpa!\n", total);
+    printf("\nOK: %d música(s) removida(s). Playlist limpa!\n", total);
     printf("Voltando ao menu em 3 segundos...\n");
     pausar(3);
 }
@@ -870,7 +840,6 @@ void limparPlaylist(void) {
    MAIN
    ---------------------------------------------- */
 int main(void) {
-    /* Carrega silenciosamente ao iniciar */
     lerCSV();
 
     int opcao;
@@ -896,8 +865,9 @@ int main(void) {
                 limparTela();
                 printf("OK: Dados salvos em \"%s\" (%d registro(s)).\n",
                        ARQUIVO_CSV, quantidade);
-                printf("\nVoltando ao menu em 3 segundos...\n");
-                pausar(3);
+                mostrarCSV();
+                printf("\nPressione ENTER para voltar ao menu...");
+                limparBuffer();
                 break;
             case 7:  carregarCSV();      break;
             case 8:  buscarPorCampo();   break;
@@ -906,15 +876,13 @@ int main(void) {
             case 11: limparPlaylist();   break;
             case 0:
                 salvarCSV();
-                /* Libera toda a memoria antes de sair */
                 while (inicio != NULL) {
                     removerNo(inicio);
                 }
                 limparTela();
-                printf("Dados salvos. Ate logo!\n");
+                printf("Dados salvos. Até logo!\n");
                 break;
             default:
-                /* opcao invalida: apenas reexibe o menu */
                 break;
         }
 
