@@ -1,4 +1,5 @@
-Integrantes
+Integrantes:
+
 Albert Claudio Arruda Nascimento
 
 Giovana Gusmão Santos
