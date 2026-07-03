@@ -1,7 +1,10 @@
 Integrantes
 Albert Claudio Arruda Nascimento
+
 Giovana Gusmão Santos
+
 Iasmin Luise Santos da Silva
+
 Monique Amorim Mendes
 
 Turma
