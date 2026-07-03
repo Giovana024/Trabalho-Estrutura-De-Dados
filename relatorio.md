@@ -8,10 +8,10 @@ Iasmin Luise Santos da Silva
 
 Monique Amorim Mendes
 
-Turma
+Turma: 
 42CMP01M3A
 
-Curso
+Curso: 
 Ciência da Computação
 
  Introdução: Esse trabalho foi realizado para a disciplina estrutura de dados com a proposta de desenvolver a parte prática que foi estudada no semestre, usando a linguagem C para utilizar diferentes estruturas de dados para resolver problemas do cotidiano. 
